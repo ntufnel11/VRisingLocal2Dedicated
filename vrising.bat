@@ -45,7 +45,7 @@ echo.
 echo What should I call your server?
 set /p SERVERNAME= "Server Name Set to: " 
 echo What should I call your save name? Please use a single word with no special characters
-set /p SAVENAME="Save Name set to: "
+set /p SAVENAME= "Save Name set to: "
 
 :FIND_LOCALSAVES
 @echo off
@@ -55,7 +55,7 @@ set /p LOCALSAVES="Please enter the Local VRising Directory that contains your a
 echo ..
 echo ..
 set /p DEDICATEDSERVER="VRisingDedicatedServer folder path containing VRisingServer.exe: "
-set DATAPATH=%DEDICATEDSERVER%\save-data\Saves\v1\%SAVENAME%
+set DATAPATH=%DEDICATEDSERVER%\save-data\Saves\v1\%SAVENAME%\
 echo Saves Will be copied from: %LOCALSAVES%
 echo.
 echo.
@@ -98,27 +98,22 @@ move %DATAPATH%\ServerHostSettings.json ServerHostSettingsOLD.jsonbak
 echo Creating Dedicated Host json file
 (
 echo {
-echo  "Name": "%SERVERNAME",
+echo  "Name": "%SERVERNAME%",
 echo  "Description": "Dedicated %SERVERNAME% Server",
 echo  "Port": 9876,
 echo  "QueryPort": 9877,
 echo  "MaxConnectedUsers": 40,
 echo  "MaxConnectedAdmins": 4,
 echo  "ServerFps": 30,
-echo  "SaveName": "%SERVERNAME%",
-echo  "Password": "",
+echo  "SaveName": "%SAVENAME%",
+echo  "Password": "password",
 echo  "Secure": true,
-echo  "ListOnMasterServer": true,
+echo  "ListOnMasterServer": false,
 echo  "AutoSaveCount": 50,
 echo  "AutoSaveInterval": 1200,
 echo  "GameSettingsPreset": "",
 echo  "AdminOnlyDebugEvents": true,
 echo  "DisableDebugEvents": false
-echo  "Rcon": {
-echo    "Enabled": false,
-echo    "Port": 25575,
-echo    "Password": ""
-echo  }
 echo }
 )> %DATAPATH%\ServerHostSettings.json
 
@@ -129,13 +124,14 @@ xcopy /c/y %DEDICATEDSERVER%\VRisingServer_Data\StreamingAssets\ServerGameSettin
 echo Saves Copied Over Successfully
 
 :OPENFIREWALL
-@echo on
-echo Opening UDP Firewall Ports on 9876 and 9877. You will need to manually configure port forwarding within your modem and any routers that are between
+echo Opening UDP Firewall Ports on 9876 and 9877
 @echo off
 netsh advfirewall firewall add rule name="VRising_9876" dir=in action=allow protocol=UDP localport=9876
 netsh advfirewall firewall add rule name="VRising_9877" dir=in action=allow protocol=UDP localport=9877
 echo verifying firewall rules
-netsh advfirewall 
+netsh advfirewall firewall show rule name=VRising_9876
+netsh advfirewall firewall show rule name=VRising_9877
+echo If firewall rules are shown above, you can configure port forwarding on 9876 and 9877
 
 
 :FINISH
