@@ -46,7 +46,7 @@ echo What should I call your server?
 set /p SERVERNAME= "Server Name Set to: " 
 echo What should I call your save name? Please use a single word with no special characters
 set /p SAVENAME= "Save Name set to: "
-
+pause
 :FIND_LOCALSAVES
 @echo off
 echo.
@@ -70,7 +70,7 @@ IF %ERRORLEVEL% EQU 1 (
 
 echo ..............
 echo ..............
-
+pause
 
 :COPY_SAVES
 echo copying local saves
@@ -78,7 +78,7 @@ echo copying local saves
 xcopy /s/i/c "%LOCALSAVES%\" "%DATAPATH%\" 
 echo Saves Copied Successfully
 
-
+pause
 :MAKESTARTSCRIPT
 echo Creating Start Script
 (
@@ -90,7 +90,7 @@ echo.
 echo @echo on
 echo VRisingServer.exe -persistentDataPath .\save-data -serverName "%SERVERNAME%" -saveName "%SAVENAME%" -logFile ".\logs\VRisingServer.log"
 )> %DEDICATEDSERVER%\Start_%SAVENAME%_Server.bat
-
+pause
 
 :HOSTJSON
 echo Backing up old ServerHostSettings.json file
@@ -119,7 +119,7 @@ echo }
 
 :COPYGAMESETTINGS
 echo Copying Dedicated Server ServerGameSettings.json file
-xcopy /c/y %DEDICATEDSERVER%\VRisingServer_Data\StreamingAssets\ServerGameSettings.json %DATAPATH%\ServerGameSettings.json
+xcopy /c/y %DEDICATEDSERVER%\VRisingServer_Data\StreamingAssets\Settings\ServerGameSettings.json %DATAPATH%\ServerGameSettings.json
 
 echo Saves Copied Over Successfully
 
