@@ -29,7 +29,7 @@ Echo Checking Permissions....
 NET SESSION >nul 2>&1
 IF %ERRORLEVEL% EQU 0 (
     ECHO Administrator PRIVILEGES Detected! 
-    GOTO FIND_LOCALSAVES
+    GOTO CHOOSENAMES
 ) ELSE (
     ECHO .......
     ECHO .......
@@ -39,6 +39,13 @@ IF %ERRORLEVEL% EQU 0 (
     pause
     exit
 )
+:CHOOSENAMES
+echo.
+echo.
+echo What should I call your server?
+set /p SERVERNAME= "Server Name Set to: " 
+echo What should I call your save name? Please use a single word with no special characters
+set /p SAVENAME="Save Name set to: "
 
 :FIND_LOCALSAVES
 @echo off
@@ -48,14 +55,14 @@ set /p LOCALSAVES="Please enter the Local VRising Directory that contains your a
 echo ..
 echo ..
 set /p DEDICATEDSERVER="VRisingDedicatedServer folder path containing VRisingServer.exe: "
+set DATAPATH=%DEDICATEDSERVER%\save-data\Saves\v1\%SAVENAME%
 echo Saves Will be copied from: %LOCALSAVES%
 echo.
-echo to
 echo.
-echo %DATAPATH%
+echo to %DATAPATH%
 CHOICE /M "Are these Paths correct?"
 IF %ERRORLEVEL% EQU 1 (
-    GOTO CHOOSENAMES
+    echo Paths Confirmed!
 ) ELSE (
     echo Please reselect the correct folders
     GOTO FIND_LOCALSAVES
@@ -63,14 +70,6 @@ IF %ERRORLEVEL% EQU 1 (
 
 echo ..............
 echo ..............
-
-:CHOOSENAMES
-echo What should I call your server?
-set /p SERVERNAME= "Server Name Set to: " 
-echo What should I call your save name? Please use a single word with no special characters
-set /p SAVENAME="Save Name set to: " 
-set DATAPATH=%DEDICATEDSERVER%\save-data\Saves\v1\%SAVENAME%
-echo Data Path is %DATAPATH%
 
 
 :COPY_SAVES
@@ -124,16 +123,19 @@ echo }
 )> %DATAPATH%\ServerHostSettings.json
 
 :COPYGAMESETTINGS
-xcopy %DEDICATEDSERVER%
-echo copying ServerGameSettings.json file
+echo Copying Dedicated Server ServerGameSettings.json file
 xcopy /c/y %DEDICATEDSERVER%\VRisingServer_Data\StreamingAssets\ServerGameSettings.json %DATAPATH%\ServerGameSettings.json
 
 echo Saves Copied Over Successfully
 
 :OPENFIREWALL
-echo Opening UDP Firewall Ports on 9876 and 9877. You will need to manually configure port forwarding within your modem and any routers that are between (Modem -> Router -> Server Host)
+@echo on
+echo Opening UDP Firewall Ports on 9876 and 9877. You will need to manually configure port forwarding within your modem and any routers that are between
+@echo off
 netsh advfirewall firewall add rule name="VRising_9876" dir=in action=allow protocol=UDP localport=9876
 netsh advfirewall firewall add rule name="VRising_9877" dir=in action=allow protocol=UDP localport=9877
+echo verifying firewall rules
+netsh advfirewall 
 
 
 :FINISH
