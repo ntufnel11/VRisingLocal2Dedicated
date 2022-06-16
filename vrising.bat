@@ -120,6 +120,7 @@ echo }
 :COPYGAMESETTINGS
 echo Copying Dedicated Server ServerGameSettings.json file
 xcopy /c/y %DEDICATEDSERVER%\VRisingServer_Data\StreamingAssets\Settings\ServerGameSettings.json %DATAPATH%\ServerGameSettings.json
+xcopy /c/y %DATAPATH%\ServerHostSettings.json %DEDICATEDSERVER%\VRisingServer_Data\StreamingAssets\Settings\ServerHostSettings.json
 
 echo Saves Copied Over Successfully
 
