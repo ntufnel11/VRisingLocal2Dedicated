@@ -12,8 +12,10 @@ echo Data Path is %DATAPATH%
 
 :COPY_SAVES
 echo copying local saves
-echo on
+@echo off
 xcopy /s/i/c "%LOCALSAVES%\" "%DATAPATH%\" 
+echo Saves Copied Successfully
+
 
 :MAKESTARTSCRIPT
 echo copying start script
@@ -53,6 +55,8 @@ echo }
 
 :COPYGAMESETTINGS
 echo copying ServerGameSettings.json file
-xcopy /c ServerGameSettings.json %DATAPATH%\ServerGameSettings.json
+xcopy /c/y ServerGameSettings.json %DATAPATH%\ServerGameSettings.json
 
+echo Saves Copied Over Successfully
+@echo off
 pause
